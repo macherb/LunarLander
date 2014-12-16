@@ -64,15 +64,16 @@ import com.example.android.lunarlander.LunarView.LunarThread;
  * </ul>
  */
 public class LunarLander extends Activity implements OnAccountsUpdateListener, OnClickListener {
-private SimulationView mSimulationView;
-private SensorManager mSensorManager;
-private PowerManager mPowerManager;
-private WindowManager mWindowManager;
-private Display mDisplay;
-private WakeLock mWakeLock;
-private ArrayList<AccountData> mAccounts;
-private AccountAdapter mAccountAdapter;
-	
+
+	private SimulationView mSimulationView;
+	private SensorManager mSensorManager;
+	private PowerManager mPowerManager;
+	private WindowManager mWindowManager;
+	private Display mDisplay;
+	private WakeLock mWakeLock;
+	private ArrayList<AccountData> mAccounts;
+	private AccountAdapter mAccountAdapter;
+
     private static final int MENU_EASY = 1;
 
     private static final int MENU_HARD = 2;
@@ -149,26 +150,26 @@ private AccountAdapter mAccountAdapter;
             case MENU_START:
                 mLunarThread.doStart();
                 mButton.setText("Pause");
-mWakeLock.acquire();
-register();
+				mWakeLock.acquire();
+				register();
                 return true;
             case MENU_STOP:
                 mLunarThread.setState(LunarThread.STATE_LOSE,
-                        getText(R.string.message_stopped));
+                getText(R.string.message_stopped));
                 mButton.setText("Start");
-if (mWakeLock.isHeld())
- mWakeLock.release();//already released?
-unregister();
+				if (mWakeLock.isHeld())
+					mWakeLock.release();//already released?
+				unregister();
                 return true;
             case MENU_PAUSE:
                 mLunarThread.pause();
                 mButton.setText("Unpause");
-mWakeLock.release();
+				mWakeLock.release();
                 return true;
             case MENU_RESUME:
                 mLunarThread.unpause();
                 mButton.setText("Pause");
-mWakeLock.acquire();
+				mWakeLock.acquire();
                 return true;
             case MENU_EASY:
                 mLunarThread.setDifficulty(LunarThread.DIFFICULTY_EASY);
@@ -230,13 +231,13 @@ mWakeLock.acquire();
             mLunarThread.restoreState(savedInstanceState);
             Log.w(this.getClass().getName(), "SIS is nonnull");
         }
-mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-mPowerManager = (PowerManager) getSystemService(POWER_SERVICE);
-mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-mDisplay = mWindowManager.getDefaultDisplay();
-mWakeLock = mPowerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, getClass().getName());
-mSimulationView = new SimulationView(this);
-//setContentView(mSimulationView);
+		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+		mPowerManager = (PowerManager) getSystemService(POWER_SERVICE);
+		mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+		mDisplay = mWindowManager.getDefaultDisplay();
+		mWakeLock = mPowerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, getClass().getName());
+		mSimulationView = new SimulationView(this);
+		//setContentView(mSimulationView);
 
 		//Prepare model for account spinner
 		mAccounts = new ArrayList<AccountData>();
@@ -276,16 +277,16 @@ mSimulationView = new SimulationView(this);
         		if ((mode == 1) || (mode == 3) || (mode == 5)) {
         			mButton.setText("Pause");
         			mLunarThread.doStart();
-mWakeLock.acquire();
-register();
+					mWakeLock.acquire();
+					register();
         		} else if (mode == 2/*STATE_PAUSE*/) {
         			mButton.setText("Pause");
             		mLunarThread.unpause();
-mWakeLock.acquire();
+					mWakeLock.acquire();
         		} else if (mode == 4/*STATE_RUNNING*/) {
         			mButton.setText("Unpause");
             		onPause();
-mWakeLock.release();//already released?
+					mWakeLock.release();//already released?
         		}
     		}
     	}
@@ -387,8 +388,8 @@ mWakeLock.release();//already released?
     }
 
     class SimulationView extends View implements SensorEventListener {
-private Sensor mAccelerometer;
-public float accelerating[] = new float[2];
+		private Sensor mAccelerometer;
+		public float accelerating[] = new float[2];
 
 		public SimulationView(Context context) {
         	super(context);
