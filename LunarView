@@ -215,14 +215,14 @@ class LunarView extends SurfaceView implements SurfaceHolder.Callback {
         /** Y of lander center. */
         private double mY;
 
-///public int mTimerLimit;
-//private String mTimerValue = "0:05";
-///private Timer mTimer = null;
-///private TimerTask mTimerTask = null;
-///private int mTaskIntervalInMillis = 1000;
-private int mBGFarMoveX = 0;
+        ///public int mTimerLimit;
+        //private String mTimerValue = "0:05";
+        ///private Timer mTimer = null;
+        ///private TimerTask mTimerTask = null;
+        ///private int mTaskIntervalInMillis = 1000;
+        private int mBGFarMoveX = 0;
 
-public String LunarName;
+        public String LunarName;
 
         public LunarThread(SurfaceHolder surfaceHolder, Context context,
                 Handler handler) {
@@ -280,8 +280,8 @@ public String LunarName;
          */
         public void doStart() {
             synchronized (mSurfaceHolder) {
-///mTimerLimit = 5;
-///mTimer = new Timer();
+                ///mTimerLimit = 5;
+                ///mTimer = new Timer();
             	// First set the game for Medium difficulty
                 mFuel = PHYS_FUEL_INIT;
                 mEngineFiring = false;
@@ -303,7 +303,7 @@ public String LunarName;
                     mGoalSpeed = mGoalSpeed * 7 / 8;
                     speedInit = speedInit * 4 / 3;
                 }
-//speedInit =0;
+                //speedInit =0;
                 // pick a convenient initial location for the lander sprite
                 mX = mCanvasWidth / 2;
                 mY = mCanvasHeight - mLanderHeight / 2;
@@ -333,32 +333,32 @@ public String LunarName;
                 if (mMode == STATE_RUNNING)
                 	setState(STATE_PAUSE);
 
-///if (mTimerTask != null) {
-/// mTimerTask.cancel();
-///}
+                ///if (mTimerTask != null) {
+                    /// mTimerTask.cancel();
+                ///}
 
             }
         }
 /*
-private void doCountDown() {
-mTimerLimit = mTimerLimit - 1;
-//mTimerValue = "0:0" + mTimerLimit;
-//Message msg = mHandler.obtainMessage();
-//Bundle b = new Bundle();
-//b.putString("text", mTimerValue);
-if (mTimerLimit == 0) {
- mTimerTask = null;
-} else {
- mTimerTask = new TimerTask() {
-  public void run() {
-   doCountDown();
-  }
- };
- mTimer.schedule(mTimerTask, mTaskIntervalInMillis);
- }
-// msg.setData(b);
-// mHandler.sendMessage(msg);
-}*/
+        private void doCountDown() {
+            mTimerLimit = mTimerLimit - 1;
+            //mTimerValue = "0:0" + mTimerLimit;
+            //Message msg = mHandler.obtainMessage();
+            //Bundle b = new Bundle();
+            //b.putString("text", mTimerValue);
+            if (mTimerLimit == 0) {
+                mTimerTask = null;
+            } else {
+                mTimerTask = new TimerTask() {
+                    public void run() {
+                        doCountDown();
+                    }
+                };
+                mTimer.schedule(mTimerTask, mTaskIntervalInMillis);
+            }
+            //msg.setData(b);
+            //mHandler.sendMessage(msg);
+        }*/
         /**
          * Restores game state from the indicated Bundle. Typically called when
          * the Activity is being restored after having been previously
@@ -398,15 +398,15 @@ if (mTimerLimit == 0) {
                     c = mSurfaceHolder.lockCanvas(null);
                     synchronized (mSurfaceHolder) {
                         if (mMode == STATE_RUNNING) { updatePhysics();
-/*if (mTimerTask == null) {
- mTimerTask = new TimerTask() {
-  public void run() {
-   doCountDown();
-  }
- };
-/// mTimer.schedule(mTimerTask, mTaskIntervalInMillis);
- }*/
-}
+                            /*if (mTimerTask == null) {
+                                mTimerTask = new TimerTask() {
+                                    public void run() {
+                                        doCountDown();
+                                    }
+                                };
+                                /// mTimer.schedule(mTimerTask, mTaskIntervalInMillis);
+                            }*/
+                        }
                         // Critical section. Do not allow mRun to be set false until
                         // we are sure all canvas draw operations are complete.
                         //
@@ -489,10 +489,10 @@ if (mTimerLimit == 0) {
             synchronized (mRunLock) {
                 mRun = b;
                 
-/*if (mRun == false) {
- if (mTimerTask != null)
-  mTimerTask.cancel();
-}
+                /*if (mRun == false) {
+                    if (mTimerTask != null)
+                        mTimerTask.cancel();
+                }
 */
             }
         }
