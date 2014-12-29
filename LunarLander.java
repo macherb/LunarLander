@@ -247,8 +247,8 @@ public class LunarLander extends Activity implements OnAccountsUpdateListener, O
 
         mAccountSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long i) {
-            	AccountData data = (AccountData) mAccountSpinner.getSelectedItem();
-       			mLunarThread.LunarName = data.toString();
+			AccountData data = (AccountData) mAccountSpinner.getSelectedItem();
+				mLunarThread.LunarName = data.toString();
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
@@ -256,12 +256,36 @@ public class LunarLander extends Activity implements OnAccountsUpdateListener, O
                 // this.
             }
         });
-    }
+    }///onResume is next
 
+    @Override
     public void onDestroy() {
         // Remove AccountManager callback
         AccountManager.get(this).removeOnAccountsUpdatedListener(this);
         super.onDestroy();
+    }///surfaceDestroyed is next
+
+    @Override
+    protected void onResume() {///after onCreate, after onRestart
+    	super.onResume();
+    	Log.w("resume", "resume");
+    }///onAccountsUpdated/surfaceCreated is next
+
+    @Override
+    protected void onStop() {///after onSaveInstanceState
+    	super.onStop();
+    	Log.w("stop", "stop");
+    }///onDestroy is next?
+
+    @Override
+    protected void onRestart() {///opened app again
+    	super.onRestart();
+    	Log.w("restart", "restart");
+    }///onResume is next
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    	Log.w("restore", "restore");
     }
 
     /**
@@ -297,7 +321,7 @@ public class LunarLander extends Activity implements OnAccountsUpdateListener, O
             		mLunarThread.setFiring(mEngineFiring);
             	}
             }
-    	}
+		}
         else if (mButtonLeft.equals(v)) {
             synchronized (mLunarThread.getSurfaceHolder()) {
             	if (mode == 4) {
@@ -328,7 +352,7 @@ public class LunarLander extends Activity implements OnAccountsUpdateListener, O
     protected void onPause() {
         mLunarView.getThread().pause(); // pause game when Activity pauses
         super.onPause();
-    }
+    }///onSaveInstanceState/onStop is next
 
     /**
      * Notification that something is about to happen, to give the Activity a
@@ -342,18 +366,18 @@ public class LunarLander extends Activity implements OnAccountsUpdateListener, O
         super.onSaveInstanceState(outState);
         mLunarThread.saveState(outState);
         Log.w(this.getClass().getName(), "SIS called");
-    }
+    }///onStop is next
 
     public void onAccountsUpdated(Account[] a) {
     	Log.w(this.getClass().getName(), "Account list update detected");
     	try {
-    		// Clear out any old data to prevent duplicates
+			// Clear out any old data to prevent duplicates
             mAccounts.clear();
             // Get account data from system
             AuthenticatorDescription[] accountTypes = AccountManager.get(this).getAuthenticatorTypes();
 
             for (int i = 0; i < a.length/**1**/; i++) {
-    			String systemAccountType = a[i].type;///"com.android.email";
+				String systemAccountType = a[i].type;///"com.android.email";
                 AuthenticatorDescription ad = getAuthenticatorDescription(systemAccountType,
                     accountTypes);
                 AccountData data = new AccountData(a[i].name/**"abc"**/, ad);
@@ -361,20 +385,20 @@ public class LunarLander extends Activity implements OnAccountsUpdateListener, O
 /*
                 systemAccountType = "com.android.exchange";
                 ad = getAuthenticatorDescription(systemAccountType,
-                        accountTypes);
+					accountTypes);
                 data = new AccountData("xyz", ad);
                 mAccounts.add(data);
 */    		}
     	} catch (Exception e) {//IllegalArgumentException
    		 Log.w(this.getClass().getName(), "catch");
     	}
-    	try {
-    		// Update the account spinner
+		try {
+			// Update the account spinner
             mAccountAdapter.notifyDataSetChanged();
-    	} catch (Exception e) {//IllegalArgumentException
-    		 Log.w(this.getClass().getName(), "catch");
-    	}
-    }
+		} catch (Exception e) {//IllegalArgumentException
+			Log.w(this.getClass().getName(), "catch");
+		}
+	}///surfaceCreated is next
 
     private static AuthenticatorDescription getAuthenticatorDescription(String type,
             AuthenticatorDescription[] dictionary) {
@@ -392,14 +416,14 @@ public class LunarLander extends Activity implements OnAccountsUpdateListener, O
 		public float accelerating[] = new float[2];
 
 		public SimulationView(Context context) {
-        	super(context);
+			super(context);
             mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
         }
 
         @Override
         public void onSensorChanged(SensorEvent event) {
-        	if (event.sensor.getType() != Sensor.TYPE_ACCELEROMETER)
+			if (event.sensor.getType() != Sensor.TYPE_ACCELEROMETER)
                 return;
 
             switch (mDisplay.getRotation()) {
@@ -451,11 +475,11 @@ public class LunarLander extends Activity implements OnAccountsUpdateListener, O
             			else
             				mRotating =  0;
             			break;
-            	}
-    			accelerating[0] =	event.values[0];
-    			accelerating[1] =	event.values[1];
-        		mLunarThread.setRotating(mRotating);
-        		mLunarThread.setFiring(mEngineFiring);
+				}
+				accelerating[0] =	event.values[0];
+				accelerating[1] =	event.values[1];
+				mLunarThread.setRotating(mRotating);
+				mLunarThread.setFiring(mEngineFiring);
             }
 
         @Override
@@ -463,10 +487,10 @@ public class LunarLander extends Activity implements OnAccountsUpdateListener, O
         }
 
         public void register() {
-        	mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
+			mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
         }
         public void unregister() {
-        	mSensorManager.unregisterListener(this);
+			mSensorManager.unregisterListener(this);
         }
     }
 
@@ -475,7 +499,8 @@ public class LunarLander extends Activity implements OnAccountsUpdateListener, O
         private String mType;
         private CharSequence mTypeLabel;
         private Drawable mIcon;
-    	public AccountData(String name, AuthenticatorDescription description) {
+
+		public AccountData(String name, AuthenticatorDescription description) {
             mName = name;
             if (description != null) {
                 mType = description.type;
@@ -504,7 +529,8 @@ public class LunarLander extends Activity implements OnAccountsUpdateListener, O
                     mIcon = getResources().getDrawable(android.R.drawable.sym_def_app_icon);
                 }
             }
-    	}
+		}
+
         public String getName() {
             return mName;
         }
@@ -522,15 +548,15 @@ public class LunarLander extends Activity implements OnAccountsUpdateListener, O
         }
 
         public String toString() {
-        	return mName + " " + mTypeLabel + " " + mType;
+			return mName + " " + mTypeLabel + " " + mType;
         }
     }
 
     private class AccountAdapter extends ArrayAdapter<AccountData> {
     	public AccountAdapter(Context context, ArrayList<AccountData> accountData) {
-    		super(context, android.R.layout.simple_spinner_item, accountData);
-    		setDropDownViewResource(R.layout.account_entry);
-    	}
+			super(context, android.R.layout.simple_spinner_item, accountData);
+			setDropDownViewResource(R.layout.account_entry);
+		}
 
         public View getDropDownView(int position, View convertView, ViewGroup parent) {
             // Inflate a view template
