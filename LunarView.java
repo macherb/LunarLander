@@ -412,7 +412,13 @@ class LunarView extends SurfaceView implements SurfaceHolder.Callback {
                         //
                         // If mRun has been toggled false, inhibit canvas operations.
                         synchronized (mRunLock) {
-                            if (mRun) doDraw(c);
+                            if (mRun) {
+                                try {
+                                    doDraw(c);
+                                } catch (Exception ex) {
+                                    throw new NullPointerException(this.getClass().getName());
+                                }
+                            }
                         }
                     }
                 } finally {
@@ -690,9 +696,16 @@ class LunarView extends SurfaceView implements SurfaceHolder.Callback {
                 canvas.drawBitmap(mBackgroundImage, mBGFarMoveX, 0, null);
 
             } else {
-                // need to draw original and wrap
-                canvas.drawBitmap(mBackgroundImage, mBGFarMoveX, 0, null);
-                canvas.drawBitmap(mBackgroundImage, newFarX, 0, null);
+                try {
+                    // need to draw original and wrap
+                    canvas.drawBitmap(mBackgroundImage, mBGFarMoveX, 0, null);
+                    canvas.drawBitmap(mBackgroundImage, newFarX, 0, null);
+                } catch (NullPointerException np_ex) {///canvas is null
+                	Log.w(this.getClass().getName(), "np ex");
+                	throw new NullPointerException("Canvas is null!!!");
+                } catch (Exception ex) {
+                	Log.w(this.getClass().getName(), "ex");
+                }
             }
 
             // Draw the background image. Operations on the Canvas accumulate
@@ -960,11 +973,17 @@ class LunarView extends SurfaceView implements SurfaceHolder.Callback {
      * Callback invoked when the Surface has been created and is ready to be
      * used.
      */
-    public void surfaceCreated(SurfaceHolder holder) {
-        // start the thread here so that we don't busy-wait in run()
-        // waiting for the surface to be created
-        thread.setRunning(true);
-        thread.start();
+    public void surfaceCreated(SurfaceHolder holder) {///after onAccountsUpdated?
+        try {
+            // start the thread here so that we don't busy-wait in run()
+            // waiting for the surface to be created
+            thread.setRunning(true);
+            thread.start();
+        } catch (IllegalThreadStateException its_ex) {
+            Log.w(this.getClass().getName(), "its ex");
+        } catch (Exception ex) {
+            Log.w(this.getClass().getName(), "ex");
+        }
     }
 
     /*
@@ -972,7 +991,7 @@ class LunarView extends SurfaceView implements SurfaceHolder.Callback {
      * be touched. WARNING: after this method returns, the Surface/Canvas must
      * never be touched again!
      */
-    public void surfaceDestroyed(SurfaceHolder holder) {
+    public void surfaceDestroyed(SurfaceHolder holder) {///after onDestroy?
         // we have to tell thread to shut down & wait for it to finish, or else
         // it might touch the Surface after we return and explode
         boolean retry = true;
